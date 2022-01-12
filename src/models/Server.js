@@ -14,6 +14,8 @@ class Server {
 
     //Rutas de mi app
     this.routes();
+  
+
   }
 
   middlewares() {

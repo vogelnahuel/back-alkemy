@@ -34,6 +34,7 @@ const operationsOperationsByIDGet = async (req, res, next) => {
 //mandar como nombre thumbnail  el campo si se utiliza desde postman la key para el File
 const operationsPost = async (req, res, next) => {
 
+
     const { description, amount, date, incomeType, category } = req.body;
 
     const newOperation = new Operation();
@@ -44,6 +45,8 @@ const operationsPost = async (req, res, next) => {
         incomeType,
         category
     });
+
+    console.log(newOperation)
 
     operations.push(newOperation);
 
@@ -104,7 +107,7 @@ const operationsDelete = async (req, res, next) => {
     if (eliminado?.httpStatusCode) {
         return next(eliminado);
     }
-    const todosMenosEliminado = productos.filter(
+    const todosMenosEliminado = operations.filter(
         (element) => element.id !== idParam
     );
     operations = todosMenosEliminado;
