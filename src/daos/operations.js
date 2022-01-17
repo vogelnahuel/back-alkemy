@@ -20,9 +20,16 @@ class OperationDao {
       this.operationsModel = mongoose.model("operations", operationsSchema);
     }
   
-    async get(limit=10,offset=0) {
+    async get(limit=10,offset=0,all=false) {
       try {
-          const productsList = await this.operationsModel.find().sort({_id:1}).skip(offset).limit(limit);
+          let  productsList;
+          if(all){
+             productsList = await this.operationsModel.find()
+          }
+          else{
+             productsList = await this.operationsModel.find().sort({_id:1}).skip(offset).limit(limit);
+          }
+          
           if (productsList.length == 0)
             throw {
               status: 404,
@@ -35,6 +42,7 @@ class OperationDao {
         throw error;
       }
     }
+
   
     async getById(operationId) {
       try {
@@ -51,24 +59,7 @@ class OperationDao {
         throw error;
       }
     }
-    async amountTotal(){
 
-        try {
-  
-            const getAmount = await this.operationsModel.aggregate([
-                { $group: { _id: "", total: { $sum: "amount" } } },
-              ])
-            console.log(getAmount)
-            if (!getAmount)
-              throw {
-                status: 404,
-                msg: "No existen registros para sumar",
-              };
-            return getAmount;
-          } catch (error) {
-            throw error;
-          }
-    }
     async add(data) {
       try {
         const newProduct = {

@@ -3,13 +3,15 @@
 
 const Operation = require("../models/Operation");
 const OperationDao = require('../daos/operations')
+const {amountTotal} = require('../utils/utils')
 const operationDao = new OperationDao();
 
 const operationsDashboardGet = async (req, res, next) => {
+    const resDashboard = await operationDao.get();
+    const All = await operationDao.get(undefined,undefined,true);
+    const amountResult = amountTotal(All);
 
-    const resDashboard = await operationDao.get()
-
-    res.json(resDashboard);
+    res.json({amountResult,operationsDashboard:resDashboard});
 };
 
 const operationsOperationsGet = async (req, res, next) => {
@@ -50,13 +52,12 @@ const operationsPut = async (req, res, next) => {
 
     const filtrado = await operationDao.getById(idParam)
 
-    const { description, amount, date, incomeType, category } = req.body;
+    const { description, amount, date, category } = req.body;
 
     //solamente cambio los pasados por parametro y si no estan dejo los que ya estaban
     const descriptionInsert = description ? description : filtrado[0].description;
     const amountInsert = amount ? amount : filtrado[0].amount;
     const dateInsert = date ? date : filtrado[0].date;
-    const incomeTypeInsert = incomeType ? incomeType : filtrado[0].incomeType;
     const categoryInsert = category ? category : filtrado[0].category;
 
 
@@ -64,7 +65,7 @@ const operationsPut = async (req, res, next) => {
         description: descriptionInsert,
         amount: amountInsert,
         date: dateInsert,
-        incomeType: incomeTypeInsert,
+        incomeType:  filtrado[0].incomeType,
         category: categoryInsert,
     })
 

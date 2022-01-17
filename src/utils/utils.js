@@ -1,19 +1,36 @@
 
+const amountTotal = (array) => {
+  let amountTotal=0;
 
-const filtrar = (array, idParam) => {
-  if (array === undefined || array.length === 0) {
-    const error = new Error("elemento  no encontrado");
-    error.httpStatusCode = 404;
-    return error;
-  }
-  const filtrado = array.filter((array) => array.id === idParam);
-  if (filtrado.length === 0) {
-    const error = new Error("elemento  no encontrado");
-    error.httpStatusCode = 404;
-    return error;
-  }
-  return filtrado;
-};
+
+
+  array.forEach(element => {
+      if(element.incomeType==="ingreso"){
+
+        amountTotal+=element.amount;
+      }
+      else{
+        amountTotal-=element.amount;
+      }
+  });
+
+  return amountTotal;
+}
+
+// const filtrar = (array, idParam) => {
+//   if (array === undefined || array.length === 0) {
+//     const error = new Error("elemento  no encontrado");
+//     error.httpStatusCode = 404;
+//     return error;
+//   }
+//   const filtrado = array.filter((array) => array.id === idParam);
+//   if (filtrado.length === 0) {
+//     const error = new Error("elemento  no encontrado");
+//     error.httpStatusCode = 404;
+//     return error;
+//   }
+//   return filtrado;
+// };
 
 
 
@@ -35,4 +52,4 @@ const filtrar = (array, idParam) => {
 
 // }
 
-module.exports = { filtrar };
+module.exports = { amountTotal };
