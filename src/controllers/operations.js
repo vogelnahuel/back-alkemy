@@ -1,39 +1,32 @@
-const { filtrar } = require("../utils/utils");
 
 //inicializacion de variables donde se guardan id y los productos
-let operations = [];
 
 const Operation = require("../models/Operation");
+const OperationDao = require('../daos/operations')
+const operationDao = new OperationDao();
 
 const operationsDashboardGet = async (req, res, next) => {
-    const operationsDashboard = operations.slice(operations.length - 10)
-    const resDashboard = {
-        amount: 1000,
-        operationsDashboard
-    }
+
+    const resDashboard = await operationDao.get()
+
     res.json(resDashboard);
 };
 
 const operationsOperationsGet = async (req, res, next) => {
     const { offset, limit } = req.body
-    const operationsOperation = operations.slice(operations.length - (offset + limit))
+    const operationsOperation = await operationDao.get(limit,offset)
     res.json(operationsOperation);
 
 };
 
 const operationsOperationsByIDGet = async (req, res, next) => {
-    const idParam = parseInt(req.params.id);
-    const filtrado = filtrar(operations, idParam);
-    if (filtrado?.httpStatusCode) {
-        return next(filtrado);
-    }
-    res.json(filtrado[0]);
-
+    const idParam = req.params.id;
+    const operationsOperation = await operationDao.getById(idParam)
+    res.json(operationsOperation);
 };
 
 //mandar como nombre thumbnail  el campo si se utiliza desde postman la key para el File
 const operationsPost = async (req, res, next) => {
-
 
     const { description, amount, date, incomeType, category } = req.body;
 
@@ -46,24 +39,16 @@ const operationsPost = async (req, res, next) => {
         category
     });
 
-    console.log(newOperation)
+    const operation = await operationDao.add(newOperation)
 
-    operations.push(newOperation);
-
-    // await archivo.crearArchivoYsobreEscribir(rutaProductos, productos);
-
-    return res.json(newOperation);
+    return res.json(operation);
 };
 
 const operationsPut = async (req, res, next) => {
 
-  
+    const idParam = req.params.id;
 
-    const idParam = parseInt(req.params.id);
-    const filtrado = filtrar(operations, idParam);
-    if (filtrado?.httpStatusCode) {
-        return next(filtrado);
-    }
+    const filtrado = await operationDao.getById(idParam)
 
     const { description, amount, date, incomeType, category } = req.body;
 
@@ -74,46 +59,24 @@ const operationsPut = async (req, res, next) => {
     const incomeTypeInsert = incomeType ? incomeType : filtrado[0].incomeType;
     const categoryInsert = category ? category : filtrado[0].category;
 
-    const idAFiltrar = operations.findIndex(
-        (contenedor) => contenedor.id == idParam
-    );
 
-    operations[idAFiltrar].updateOperation({
+    const update = await operationDao.update(idParam,{
         description: descriptionInsert,
         amount: amountInsert,
         date: dateInsert,
         incomeType: incomeTypeInsert,
         category: categoryInsert,
-        id: idParam,
-    });
+    })
 
-
-    res.json({
-        description: descriptionInsert,
-        amount: amountInsert,
-        date: dateInsert,
-        incomeType: incomeTypeInsert,
-        category: categoryInsert,
-        id: idParam,
-    });
+    res.json(update);
 };
 
 const operationsDelete = async (req, res, next) => {
 
-    const idParam = parseInt(req.params.id);
+  const idParam = req.params.id;
+  await operationDao.delete(idParam);
+  res.json({text:`eliminado con exito ${idParam}`})
 
-    const eliminado = filtrar(operations, idParam);
-
-    if (eliminado?.httpStatusCode) {
-        return next(eliminado);
-    }
-    const todosMenosEliminado = operations.filter(
-        (element) => element.id !== idParam
-    );
-    operations = todosMenosEliminado;
-    
-
-    res.json(eliminado[0]);
 };
 
 module.exports = {
