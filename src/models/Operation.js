@@ -6,15 +6,12 @@ class Operation {
       this.incomeType = "";
       this.category = "";
     }
-    static id = 0;
     createOperation (obj) {
         this.description = obj.description;
         this.amount =  obj.amount;
         this.date =  obj.date;
         this.incomeType = obj.incomeType;
         this.category =  obj.category;
-      Operation.id++;
-      this.id = Operation.id;
     }
   
     updateOperation(obj) {

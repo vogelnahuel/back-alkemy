@@ -10,13 +10,18 @@ const operationsSchema = new mongoose.Schema({
   category: { type: String, required: true, max: 70 },
 });
 
-
 class OperationDao {
     mongoDB;
     operationsModel;
     constructor() {
       this.mongoDB = `mongodb+srv://nahuel:nahuel@cluster0.4gz4u.mongodb.net/alkemy?retryWrites=true&w=majority`
-      mongoose.connect(this.mongoDB);
+      if(process.env.MONGODB_URI){
+        mongoose.connect(process.env.MONGODB_URI);
+      }
+      else{
+        mongoose.connect(this.mongoDB);
+       }
+     
       this.operationsModel = mongoose.model("operations", operationsSchema);
     }
   
@@ -33,7 +38,7 @@ class OperationDao {
           if (productsList.length == 0)
             throw {
               status: 404,
-              msg: "Todavia no hay productos cargados en tu base de datos",
+              msg: "Todavia no hay operaciones cargados en tu base de datos",
             };
   
           return productsList;
@@ -48,11 +53,11 @@ class OperationDao {
       try {
   
         const getProduct = await this.operationsModel.findById(operationId);
-  
+        
         if (!getProduct)
           throw {
             status: 404,
-            msg: "El producto solicitado no existe",
+            msg: "la operacion solicitada no existe",
           };
         return getProduct;
       } catch (error) {
@@ -79,7 +84,12 @@ class OperationDao {
   
     async delete(operationId) {
       try {
-        await this.operationsModel.deleteOne({ _id: operationId });
+       const result = await this.operationsModel.deleteOne({ _id: operationId });
+        if (!result)
+        throw {
+          status: 404,
+          msg: "la operacion solicitada no existe",
+        };
       } catch (error) {
         throw error;
       }
@@ -93,6 +103,12 @@ class OperationDao {
           newData,
           { new: true }
         );
+        console.log(update)
+        if (!update)
+        throw {
+          status: 404,
+          msg: "la operacion solicitada no existe",
+        };
         return update;
       } catch (error) {
         throw error;

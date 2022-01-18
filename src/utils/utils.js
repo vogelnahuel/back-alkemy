@@ -51,5 +51,11 @@ const amountTotal = (array) => {
 //   }
 
 // }
+const ErrorCreate=(errorMsg,msgCustom) =>{
+  errorMsg.msg  = errorMsg.msg ? errorMsg.msg : msgCustom
+  const error = new Error(errorMsg.msg);
+  error.status = errorMsg.status;
+  return error;
+}
 
-module.exports = { amountTotal };
+module.exports = { amountTotal,ErrorCreate };
