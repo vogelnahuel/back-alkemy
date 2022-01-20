@@ -32,7 +32,7 @@ class OperationDao {
              productsList = await this.operationsModel.find()
           }
           else{
-             productsList = await this.operationsModel.find().sort({_id:1}).skip(offset).limit(limit);
+             productsList = await this.operationsModel.find().sort({_id:-1}).skip(offset).limit(limit);
           }
           
           if (productsList.length == 0)
