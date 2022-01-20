@@ -10,6 +10,13 @@
 #https://alkemy-challenge-back.herokuapp.com/  
 
 
-  
+ejemplos de url para probar 
+
+
+https://alkemy-challenge-back.herokuapp.com/api/operations/operations
+
+https://alkemy-challenge-back.herokuapp.com/api/operations/id/operations
+
+https://alkemy-challenge-back.herokuapp.com/api/operations/id
 
 
