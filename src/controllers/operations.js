@@ -20,10 +20,13 @@ const operationsDashboardGet = async (req, res, next) => {
 };
 
 const operationsOperationsGet = async (req, res, next) => {
-  const { offset, limit } = req.body;
+
+  const { offset, limit } = req.query;
+
+
   let operationsOperation;
   try {
-    operationsOperation = await operationDao.get(limit, offset);
+    operationsOperation = await operationDao.get(parseInt(limit), parseInt(offset));
   } catch (error) {
     return next(ErrorCreate(error));
   }
