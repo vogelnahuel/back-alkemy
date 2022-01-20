@@ -27,6 +27,7 @@ class OperationDao {
   
     async get(limit=10,offset=0,all=false) {
       try {
+
           let  productsList;
           if(all){
              productsList = await this.operationsModel.find()

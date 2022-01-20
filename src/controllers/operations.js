@@ -21,7 +21,9 @@ const operationsDashboardGet = async (req, res, next) => {
 
 const operationsOperationsGet = async (req, res, next) => {
 
-  const { offset, limit } = req.query;
+
+  const { offset, limit } = req.query.limit ?  req.query : req.body;
+  
 
 
   let operationsOperation;
